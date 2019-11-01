@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+		function observe(val){
+			Object.keys(val).forEach(key => {
+				defineReactive(val,key)
+			})
+		}
+
+		function defineReactive(obj,key){
+			let val = obj[key]
+			if(Object.prototype.toString.call(val) === '[object Object]'){
+				observe(val)
+				return
+			}
+			Object.defineProperty(obj,key,{
+			  get: function(){
+					return val
+			  },
+			  set: function(newval){
+			  	if(val == newval)
+			  		return
+			  	console.log(`oldval:${val} newval:${newval}`)
+			  	val = newval
+			  }
+			})
+		}
+
+		function MyVue(options){
+			let data = this._data = options.data || {};
+			//把data代理到vm实例上
+			Object.keys(data).forEach(key => {
+				Object.defineProperty(this,key,{
+				 	enumerable: true,
+				  configurable: true,
+				  get: function(){
+						return this._data[key]
+				  },
+				  set: function(newval){
+						this._data[key] = newval
+				  }
+				})
+			})
+			//监听data的值发生改变
+			observe(data)
+		}
+
+	</script>
+</head>
+<body>
+
+	<div id="app"></div>
+
+	<script type="text/javascript">
+		let v1 = new MyVue({
+			data: {
+				message: '你好',
+				borth:{
+					age: 18
+				}
+			}
+		})
+	</script>
+</body>
+</html>
