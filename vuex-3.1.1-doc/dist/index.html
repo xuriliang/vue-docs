@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vuex Sample</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+
+	<div id="app">
+		<div>{{user.firstName}} === {{myFirstName}} </div>
+		<div>{{fullName}}</div>
+
+		<button @click="onModifyName">modifyName</button>
+		<button @click="onModifyNameAction">modifyNameAction</button>
+	</div>
+
+	<script type="text/javascript">
+
+		window.onload = function () {
+			const store = new Vuex.Store({
+				modules: {
+					user: {
+						//namespaced: true,
+						state: {
+							firstName: 'xu',
+							lastName: 'riliang'
+						},
+						getters: {
+							fullName: state => {
+								return state.firstName+''+state.lastName
+							}
+						},
+						mutations: { 
+					    MODIFY_NAME (state,newName) {
+					      state.lastName = newName
+					    }
+					  },
+					  actions: {
+					    modifyName (context) {
+					      context.commit('MODIFY_NAME','sdfksdfks')
+					    }
+					  }
+					}
+				}
+			})
+
+			var app = new Vue({
+				el: '#app',
+				store,
+				computed: {
+					...Vuex.mapState(['user']),
+					...Vuex.mapGetters(['fullName']),
+					myFirstName: function(){
+						return this.$store.state.user.firstName	
+					}
+				},
+				methods: {
+					onModifyName(){
+						this.$store.commit('MODIFY_NAME','rl')
+					},
+					onModifyNameAction(){
+						setTimeout(() => {
+							this.$store.dispatch('modifyName')
+						},1000)
+					}
+				}
+			})
+		}
+	</script>
+</body>
+</html>

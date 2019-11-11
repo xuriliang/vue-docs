@@ -12,7 +12,7 @@ export function initUse (Vue: GlobalAPI) {
     // additional parameters
     const args = toArray(arguments, 1)
     args.unshift(this)
-    if (typeof plugin.install === 'function') {
+    if (typeof plugin.install === 'function') {  //@doc 执行install函数
       plugin.install.apply(plugin, args)
     } else if (typeof plugin === 'function') {
       plugin.apply(null, args)

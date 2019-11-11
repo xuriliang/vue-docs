@@ -18,7 +18,15 @@ export const mapState = normalizeNamespace((namespace, states) => {
         state = module.context.state
         getters = module.context.getters
       }
-      return typeof val === 'function'
+      /*
+       * @doc 如果val是一个函数，则返回函数的调用，否则从state里找出这个val对应的属性 
+       *   mapState({
+       *     count: state => state.count,
+       *     // 传字符串参数 'count' 等同于 `state => state.count`
+       *     countAlias: 'count',
+       *  })
+      */
+      return typeof val === 'function' 
         ? val.call(this, state, getters)
         : state[val]
     }
@@ -128,7 +136,7 @@ export const createNamespacedHelpers = (namespace) => ({
  * @param {Array|Object} map
  * @return {Object}
  */
-function normalizeMap (map) {
+function normalizeMap (map) { //@doc 将map转换成{key,val}的形式
   return Array.isArray(map)
     ? map.map(key => ({ key, val: key }))
     : Object.keys(map).map(key => ({ key, val: map[key] }))
@@ -141,10 +149,10 @@ function normalizeMap (map) {
  */
 function normalizeNamespace (fn) {
   return (namespace, map) => {
-    if (typeof namespace !== 'string') {
+    if (typeof namespace !== 'string') { //@doc namespace不存在时
       map = namespace
       namespace = ''
-    } else if (namespace.charAt(namespace.length - 1) !== '/') {
+    } else if (namespace.charAt(namespace.length - 1) !== '/') { //@doc namespace最后补全'/''
       namespace += '/'
     }
     return fn(namespace, map)

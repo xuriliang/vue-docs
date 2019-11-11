@@ -1,7 +1,7 @@
 import Module from './module'
 import { assert, forEachValue } from '../util'
 
-export default class ModuleCollection {
+export default class ModuleCollection { //@doc 根据modules构建一个Module的树结构
   constructor (rawRootModule) {
     // register root module (Vuex.Store options)
     this.register([], rawRootModule, false)
@@ -39,7 +39,7 @@ export default class ModuleCollection {
     }
 
     // register nested modules
-    if (rawModule.modules) {
+    if (rawModule.modules) { //@doc 递归modules
       forEachValue(rawModule.modules, (rawChildModule, key) => {
         this.register(path.concat(key), rawChildModule, runtime)
       })

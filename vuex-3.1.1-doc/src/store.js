@@ -5,12 +5,12 @@ import { forEachValue, isObject, isPromise, assert, partial } from './util'
 
 let Vue // bind on install
 
-export class Store {
+export class Store { //@doc new Vuex.Store
   constructor (options = {}) {
     // Auto install if it is not done yet and `window` has `Vue`.
     // To allow users to avoid auto-installation in some cases,
     // this code should be placed here. See #731
-    if (!Vue && typeof window !== 'undefined' && window.Vue) {
+    if (!Vue && typeof window !== 'undefined' && window.Vue) { //@doc  在浏览器环境下自动安装
       install(window.Vue)
     }
 
@@ -31,7 +31,7 @@ export class Store {
     this._actionSubscribers = []
     this._mutations = Object.create(null)
     this._wrappedGetters = Object.create(null)
-    this._modules = new ModuleCollection(options)
+    this._modules = new ModuleCollection(options)  
     this._modulesNamespaceMap = Object.create(null)
     this._subscribers = []
     this._watcherVM = new Vue()
@@ -39,6 +39,7 @@ export class Store {
     // bind commit and dispatch to self
     const store = this
     const { dispatch, commit } = this
+    //@doc this修改为store对象
     this.dispatch = function boundDispatch (type, payload) {
       return dispatch.call(store, type, payload)
     }
@@ -58,7 +59,7 @@ export class Store {
 
     // initialize the store vm, which is responsible for the reactivity
     // (also registers _wrappedGetters as computed properties)
-    resetStoreVM(this, state)
+    resetStoreVM(this, state) 
 
     // apply plugins
     plugins.forEach(plugin => plugin(this))
@@ -69,11 +70,11 @@ export class Store {
     }
   }
 
-  get state () {
+  get state () { //@doc this.$store.state 相当于 this._vm._data.$$state
     return this._vm._data.$$state
   }
 
-  set state (v) {
+  set state (v) {  //@doc 不允许直接改变state中的值
     if (process.env.NODE_ENV !== 'production') {
       assert(false, `use store.replaceState() to explicit replace store state.`)
     }
@@ -85,7 +86,7 @@ export class Store {
       type,
       payload,
       options
-    } = unifyObjectStyle(_type, _payload, _options)
+    } = unifyObjectStyle(_type, _payload, _options) //@doc 转换为对象类型
 
     const mutation = { type, payload }
     const entry = this._mutations[type]
@@ -254,6 +255,7 @@ function resetStoreVM (store, state, hot) {
   store.getters = {}
   const wrappedGetters = store._wrappedGetters
   const computed = {}
+  //@doc 为每一个getter设置get方法，比如获取this.$store.getters.fulleName的时候获取的是store._vm.fulleName
   forEachValue(wrappedGetters, (fn, key) => {
     // use computed to leverage its lazy-caching mechanism
     // direct inline function use will lead to closure preserving oldVm.
@@ -270,7 +272,7 @@ function resetStoreVM (store, state, hot) {
   // some funky global mixins
   const silent = Vue.config.silent
   Vue.config.silent = true
-  store._vm = new Vue({
+  store._vm = new Vue({ //@doc 通过Vue的响应式来达到对state数据的监听和getters达到计算属性效果
     data: {
       $$state: state
     },
@@ -283,7 +285,7 @@ function resetStoreVM (store, state, hot) {
     enableStrictMode(store)
   }
 
-  if (oldVm) {
+  if (oldVm) { //@doc销毁old vm
     if (hot) {
       // dispatch changes in all subscribed watchers
       // to force getter re-evaluation for hot reloading.
@@ -305,7 +307,7 @@ function installModule (store, rootState, path, module, hot) {
   }
 
   // set state
-  if (!isRoot && !hot) {
+  if (!isRoot && !hot) { 
     const parentState = getNestedState(rootState, path.slice(0, -1))
     const moduleName = path[path.length - 1]
     store._withCommit(() => {
@@ -492,8 +494,12 @@ function unifyObjectStyle (type, payload, options) {
 
   return { type, payload, options }
 }
-
-export function install (_Vue) {
+/*
+* @doc 
+* 提供给Vue.use使用
+* Vue.use = function (plugin: Function | Object) 
+*/
+export function install (_Vue) { 
   if (Vue && _Vue === Vue) {
     if (process.env.NODE_ENV !== 'production') {
       console.error(
