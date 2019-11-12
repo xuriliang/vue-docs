@@ -34,17 +34,17 @@ export function install (Vue) {
       registerInstance(this)
     }
   })
-
+  //@doc this.$router 指向 this._routerRoot._router
   Object.defineProperty(Vue.prototype, '$router', {
     get () { return this._routerRoot._router }
   })
-
+  //@doc this.$route 指向 this._routerRoot._route
   Object.defineProperty(Vue.prototype, '$route', {
     get () { return this._routerRoot._route }
   })
 
-  Vue.component('RouterView', View)
-  Vue.component('RouterLink', Link)
+  Vue.component('RouterView', View) //@doc <router-view></router-view>
+  Vue.component('RouterLink', Link) //@doc <router-link></router-link>
 
   const strats = Vue.config.optionMergeStrategies
   // use the same hook merging strategy for route hooks

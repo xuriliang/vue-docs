@@ -10,7 +10,7 @@ const toTypes: Array<Function> = [String, Object]
 const eventTypes: Array<Function> = [String, Array]
 
 const noop = () => {}
-
+//@doc https://router.vuejs.org/zh/api/#router-link-props
 export default {
   name: 'RouterLink',
   props: {
@@ -38,7 +38,7 @@ export default {
     const { location, route, href } = router.resolve(
       this.to,
       current,
-      this.append
+      this.append //@doc 当append为true，在当前 (相对) 路径前添加基路径。
     )
 
     const classes = {}

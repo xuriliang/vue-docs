@@ -10,9 +10,9 @@ export function createRouteMap (
   oldPathMap?: Dictionary<RouteRecord>,
   oldNameMap?: Dictionary<RouteRecord>
 ): {
-  pathList: Array<string>,
-  pathMap: Dictionary<RouteRecord>,
-  nameMap: Dictionary<RouteRecord>
+  pathList: Array<string>, //@doc path数组
+  pathMap: Dictionary<RouteRecord>,//@doc {path : RouteRecord}
+  nameMap: Dictionary<RouteRecord> //@doc {name : RouteRecord}
 } {
   // the path list is used to control path matching priority
   const pathList: Array<string> = oldPathList || []
@@ -26,7 +26,7 @@ export function createRouteMap (
   })
 
   // ensure wildcard routes are always at the end
-  for (let i = 0, l = pathList.length; i < l; i++) {
+  for (let i = 0, l = pathList.length; i < l; i++) { //@doc 确保通配符 * 在数组最后
     if (pathList[i] === '*') {
       pathList.push(pathList.splice(i, 1)[0])
       l--
@@ -59,7 +59,7 @@ function addRouteRecord (
   nameMap: Dictionary<RouteRecord>,
   route: RouteConfig,
   parent?: RouteRecord,
-  matchAs?: string
+  matchAs?: string //@doc 别名路径
 ) {
   const { path, name } = route
   if (process.env.NODE_ENV !== 'production') {
@@ -73,22 +73,22 @@ function addRouteRecord (
   }
 
   const pathToRegexpOptions: PathToRegexpOptions =
-    route.pathToRegexpOptions || {}
+    route.pathToRegexpOptions || {} //@doc 编译正则的选项
   const normalizedPath = normalizePath(path, parent, pathToRegexpOptions.strict)
 
-  if (typeof route.caseSensitive === 'boolean') {
+  if (typeof route.caseSensitive === 'boolean') { //@doc 匹配规则是否大小写敏感
     pathToRegexpOptions.sensitive = route.caseSensitive
   }
 
   const record: RouteRecord = {
-    path: normalizedPath,
-    regex: compileRouteRegex(normalizedPath, pathToRegexpOptions),
+    path: normalizedPath, //@doc 路由path
+    regex: compileRouteRegex(normalizedPath, pathToRegexpOptions), //@doc 对应正则表达式
     components: route.components || { default: route.component },
     instances: {},
-    name,
-    parent,
+    name, //@doc 命名路由
+    parent, 
     matchAs,
-    redirect: route.redirect,
+    redirect: route.redirect, //@doc 跳转地址
     beforeEnter: route.beforeEnter,
     meta: route.meta || {},
     props:
@@ -134,7 +134,7 @@ function addRouteRecord (
     pathMap[record.path] = record
   }
 
-  if (route.alias !== undefined) {
+  if (route.alias !== undefined) { //@doc 别名，多个路径都指向同一个组件
     const aliases = Array.isArray(route.alias) ? route.alias : [route.alias]
     for (let i = 0; i < aliases.length; ++i) {
       const alias = aliases[i]
