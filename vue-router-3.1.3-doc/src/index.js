@@ -39,21 +39,21 @@ export default class VueRouter {
     this.beforeHooks = []
     this.resolveHooks = []
     this.afterHooks = []
-    this.matcher = createMatcher(options.routes || [], this)
+    this.matcher = createMatcher(options.routes || [], this) //@doc {match,addRoutes}
 
     let mode = options.mode || 'hash'
-    this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false
+    this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false  //@doc 是否自动切换到hash模式
     if (this.fallback) {
       mode = 'hash'
     }
-    if (!inBrowser) {
+    if (!inBrowser) { //@doc 非浏览器环境，typeof window !== 'undefined'
       mode = 'abstract'
     }
     this.mode = mode
 
     switch (mode) {
       case 'history':
-        this.history = new HTML5History(this, options.base)
+        this.history = new HTML5History(this, options.base) //@doc options.base 应用的基路径,默认值 /
         break
       case 'hash':
         this.history = new HashHistory(this, options.base, this.fallback)
@@ -87,11 +87,11 @@ export default class VueRouter {
       `before creating root instance.`
     )
 
-    this.apps.push(app)
+    this.apps.push(app) //@doc app -> vue实例
 
     // set up app destroyed handler
     // https://github.com/vuejs/vue-router/issues/2639
-    app.$once('hook:destroyed', () => {
+    app.$once('hook:destroyed', () => { //@doc app销毁，从apps中删除，并且重新设置当前app
       // clean out app from this.apps array once destroyed
       const index = this.apps.indexOf(app)
       if (index > -1) this.apps.splice(index, 1)
@@ -117,13 +117,13 @@ export default class VueRouter {
         history.setupListeners()
       }
       history.transitionTo(
-        history.getCurrentLocation(),
-        setupHashListener,
-        setupHashListener
+        history.getCurrentLocation(), //@doc getHash
+        setupHashListener, //@doc onComplete回调
+        setupHashListener //@doc onAbort回调
       )
     }
 
-    history.listen(route => {
+    history.listen(route => {           //@doc 添加回调,updateRoute时执行
       this.apps.forEach((app) => {
         app._route = route
       })

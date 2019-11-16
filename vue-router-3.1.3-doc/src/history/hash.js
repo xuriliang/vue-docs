@@ -14,7 +14,7 @@ export class HashHistory extends History {
     if (fallback && checkFallback(this.base)) {
       return
     }
-    ensureSlash()
+    ensureSlash() //@doc 斜杠补充
   }
 
   // this is delayed until the app mounts
@@ -114,12 +114,12 @@ export function getHash (): string {
   // empty path
   if (index < 0) return ''
 
-  href = href.slice(index + 1)
+  href = href.slice(index + 1) //@doc get hash
   // decode the hash but not the search or hash
   // as search(query) is already decoded
   // https://github.com/vuejs/vue-router/issues/2708
   const searchIndex = href.indexOf('?')
-  if (searchIndex < 0) {
+  if (searchIndex < 0) { //@doc 不存在参数
     const hashIndex = href.indexOf('#')
     if (hashIndex > -1) {
       href = decodeURI(href.slice(0, hashIndex)) + href.slice(hashIndex)

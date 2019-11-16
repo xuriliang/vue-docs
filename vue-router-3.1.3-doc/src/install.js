@@ -20,7 +20,7 @@ export function install (Vue) {
 
   Vue.mixin({
     beforeCreate () {
-      if (isDef(this.$options.router)) {
+      if (isDef(this.$options.router)) { //@doc new VueRouter实例
         this._routerRoot = this
         this._router = this.$options.router
         this._router.init(this)
@@ -48,5 +48,6 @@ export function install (Vue) {
 
   const strats = Vue.config.optionMergeStrategies
   // use the same hook merging strategy for route hooks
+  //@doc 路由钩子
   strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created
 }

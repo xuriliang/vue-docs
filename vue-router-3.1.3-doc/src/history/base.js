@@ -35,7 +35,7 @@ export class History {
     this.router = router
     this.base = normalizeBase(base)
     // start with a route object that stands for "nowhere"
-    this.current = START
+    this.current = START //@doc 默认开始 / 路由，createRoute(null, {path: '/'})
     this.pending = null
     this.ready = false
     this.readyCbs = []
@@ -63,11 +63,11 @@ export class History {
   }
 
   transitionTo (
-    location: RawLocation,
+    location: RawLocation, //@doc hash值
     onComplete?: Function,
     onAbort?: Function
   ) {
-    const route = this.router.match(location, this.current)
+    const route = this.router.match(location, this.current) //@doc 当前地址匹配的路由
     this.confirmTransition(
       route,
       () => {
