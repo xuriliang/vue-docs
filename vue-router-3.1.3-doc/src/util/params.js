@@ -4,10 +4,11 @@ import { warn } from './warn'
 import Regexp from 'path-to-regexp'
 
 // $flow-disable-line
-const regexpCompileCache: {
+const regexpCompileCache: { //@doc 路径对应Compile缓存
   [key: string]: Function
 } = Object.create(null)
 
+//@doc 填充路径里的参数,返回填充值后的路径
 export function fillParams (
   path: string,
   params: ?Object,
@@ -15,6 +16,8 @@ export function fillParams (
 ): string {
   params = params || {}
   try {
+    //@doc 获取path的compile，并缓存起来
+    //@doc Regexp.compile -> 填充路径里的参数 https://www.npmjs.com/package/path-to-regexp
     const filler =
       regexpCompileCache[path] ||
       (regexpCompileCache[path] = Regexp.compile(path))

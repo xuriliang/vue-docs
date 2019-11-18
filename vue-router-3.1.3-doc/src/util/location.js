@@ -15,7 +15,7 @@ export function normalizeLocation (
 ): Location {
   let next: Location = typeof raw === 'string' ? { path: raw } : raw
   // named target
-  if (next._normalized) {
+  if (next._normalized) { //@doc 已经规范化
     return next
   } else if (next.name) {
     return extend({}, raw)
@@ -44,9 +44,9 @@ export function normalizeLocation (
     ? resolvePath(parsedPath.path, basePath, append || next.append)
     : basePath
 
-  const query = resolveQuery(
+  const query = resolveQuery( //@doc 参数转换为对象，合并extraQuery
     parsedPath.query,
-    next.query,
+    next.query, //@doc extraQuery
     router && router.options.parseQuery
   )
 

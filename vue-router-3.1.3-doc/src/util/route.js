@@ -21,11 +21,11 @@ export function createRoute (
   const route: Route = {
     name: location.name || (record && record.name),
     meta: (record && record.meta) || {},
-    path: location.path || '/',
+    path: location.path || '/', 
     hash: location.hash || '',
-    query,
+    query,  //@doc ? 查询参数
     params: location.params || {},
-    fullPath: getFullPath(location, stringifyQuery),
+    fullPath: getFullPath(location, stringifyQuery), //@doc 完整路径
     matched: record ? formatMatch(record) : []
   }
   if (redirectedFrom) {
@@ -34,6 +34,7 @@ export function createRoute (
   return Object.freeze(route)
 }
 
+//@doc 克隆对象和数组
 function clone (value) {
   if (Array.isArray(value)) {
     return value.map(clone)
@@ -62,6 +63,7 @@ function formatMatch (record: ?RouteRecord): Array<RouteRecord> {
   return res
 }
 
+//@doc 把path,query，hash拼接成完整字符串
 function getFullPath (
   { path, query = {}, hash = '' },
   _stringifyQuery
@@ -70,6 +72,7 @@ function getFullPath (
   return (path || '/') + stringify(query) + hash
 }
 
+//@doc 是否为同一路由
 export function isSameRoute (a: Route, b: ?Route): boolean {
   if (b === START) {
     return a === b
@@ -93,6 +96,7 @@ export function isSameRoute (a: Route, b: ?Route): boolean {
   }
 }
 
+//@doc 对象是否一致
 function isObjectEqual (a = {}, b = {}): boolean {
   // handle null value #1566
   if (!a || !b) return a === b
@@ -108,7 +112,7 @@ function isObjectEqual (a = {}, b = {}): boolean {
     if (typeof aVal === 'object' && typeof bVal === 'object') {
       return isObjectEqual(aVal, bVal)
     }
-    return String(aVal) === String(bVal)
+    return String(aVal) === String(bVal)  //@doc 内容是否一致
   })
 }
 

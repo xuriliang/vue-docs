@@ -4,6 +4,7 @@ import { inBrowser } from './dom'
 import { saveScrollPosition } from './scroll'
 import { genStateKey, setStateKey, getStateKey } from './state-key'
 
+//@doc 浏览器是否支持pushState
 export const supportsPushState =
   inBrowser &&
   (function () {
@@ -22,13 +23,13 @@ export const supportsPushState =
   })()
 
 export function pushState (url?: string, replace?: boolean) {
-  saveScrollPosition()
+  saveScrollPosition() //@doc 保存滚动条的位置
   // try...catch the pushState call to get around Safari
   // DOM Exception 18 where it limits to 100 pushState calls
   const history = window.history
   try {
     if (replace) {
-      history.replaceState({ key: getStateKey() }, '', url)
+      history.replaceState({ key: getStateKey() }, '', url)  //@doc key用来关联浏览器history中滚动条位置，positionStore
     } else {
       history.pushState({ key: setStateKey(genStateKey()) }, '', url)
     }

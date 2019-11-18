@@ -15,6 +15,7 @@ const encode = str => encodeURIComponent(str)
 
 const decode = decodeURIComponent
 
+//@doc 字符串转换为对象，合并extraQuery
 export function resolveQuery (
   query: ?string,
   extraQuery: Dictionary<string> = {},
@@ -34,6 +35,7 @@ export function resolveQuery (
   return parsedQuery
 }
 
+//@doc 字符串转换成对象
 function parseQuery (query: string): Dictionary<string> {
   const res = {}
 
@@ -62,6 +64,7 @@ function parseQuery (query: string): Dictionary<string> {
   return res
 }
 
+//@doc 转换成 ?a=1&b=2 字符串格式
 export function stringifyQuery (obj: Dictionary<string>): string {
   const res = obj ? Object.keys(obj).map(key => {
     const val = obj[key]

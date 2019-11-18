@@ -7,7 +7,7 @@ const Time =
     ? window.performance
     : Date
 
-export function genStateKey (): string {
+export function genStateKey (): string { //@doc 随机数
   return Time.now().toFixed(3)
 }
 

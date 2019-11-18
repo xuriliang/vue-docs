@@ -16,7 +16,7 @@ export function setupScroll () {
   const absolutePath = window.location.href.replace(protocolAndPath, '')
   window.history.replaceState({ key: getStateKey() }, '', absolutePath)
   window.addEventListener('popstate', e => {
-    saveScrollPosition()
+    saveScrollPosition() 
     if (e.state && e.state.key) {
       setStateKey(e.state.key)
     }
@@ -32,9 +32,9 @@ export function handleScroll (
   if (!router.app) {
     return
   }
-
-  const behavior = router.options.scrollBehavior
-  if (!behavior) {
+  //@doc https://router.vuejs.org/zh/guide/advanced/scroll-behavior.html#%E5%BC%82%E6%AD%A5%E6%BB%9A%E5%8A%A8
+  const behavior = router.options.scrollBehavior  //@doc scrollBehavior类型Function，
+  if (!behavior) { //@doc 如果没有设置滚动行为
     return
   }
 
@@ -72,7 +72,7 @@ export function handleScroll (
   })
 }
 
-export function saveScrollPosition () {
+export function saveScrollPosition () { //@doc 滚动条位置
   const key = getStateKey()
   if (key) {
     positionStore[key] = {
@@ -82,14 +82,14 @@ export function saveScrollPosition () {
   }
 }
 
-function getScrollPosition (): ?Object {
+function getScrollPosition (): ?Object { //@doc 获取滚动条位置
   const key = getStateKey()
   if (key) {
     return positionStore[key]
   }
 }
 
-function getElementPosition (el: Element, offset: Object): Object {
+function getElementPosition (el: Element, offset: Object): Object { //@doc 元素的位置
   const docEl: any = document.documentElement
   const docRect = docEl.getBoundingClientRect()
   const elRect = el.getBoundingClientRect()
@@ -121,18 +121,20 @@ function isNumber (v: any): boolean {
   return typeof v === 'number'
 }
 
-const hashStartsWithNumberRE = /^#\d/
+const hashStartsWithNumberRE = /^#\d/ //@doc id选择器
 
+//@doc 滚动到指定的位置
 function scrollToPosition (shouldScroll, position) {
   const isObject = typeof shouldScroll === 'object'
   if (isObject && typeof shouldScroll.selector === 'string') {
     // getElementById would still fail if the selector contains a more complicated query like #main[data-attr]
     // but at the same time, it doesn't make much sense to select an element with an id and an extra selector
+    //@doc 如果为Id选择器，使用getElementById
     const el = hashStartsWithNumberRE.test(shouldScroll.selector) // $flow-disable-line
       ? document.getElementById(shouldScroll.selector.slice(1)) // $flow-disable-line
       : document.querySelector(shouldScroll.selector)
 
-    if (el) {
+    if (el) { //@doc 滚动到指定元素位置
       let offset =
         shouldScroll.offset && typeof shouldScroll.offset === 'object'
           ? shouldScroll.offset
