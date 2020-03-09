@@ -1,10 +1,11 @@
 import { warn } from '../util/warn'
 import { extend } from '../util/misc'
 
+//@doc <router-view></router-view>
 export default {
   name: 'RouterView',
   functional: true,
-  props: {
+  props: {  //@doc 接受一个参数，name
     name: {
       type: String,
       default: 'default'
@@ -18,20 +19,20 @@ export default {
     // so that components rendered by router-view can resolve named slots
     const h = parent.$createElement
     const name = props.name
-    const route = parent.$route
+    const route = parent.$route  //@doc vue option中的VueRouter实例对象 
     const cache = parent._routerViewCache || (parent._routerViewCache = {})
 
     // determine current view depth, also check to see if the tree
     // has been toggled inactive but kept-alive.
     let depth = 0
     let inactive = false
-    while (parent && parent._routerRoot !== parent) {
+    while (parent && parent._routerRoot !== parent) { //@doc 在install.js中_routerRoot中中存放了根组件的实例，这边循环向上级访问，直到访问到根组件，得到depth深度
       const vnodeData = parent.$vnode && parent.$vnode.data
       if (vnodeData) {
         if (vnodeData.routerView) {
           depth++
         }
-        if (vnodeData.keepAlive && parent._inactive) {
+        if (vnodeData.keepAlive && parent._inactive) { //@doc 组件是否被keep-alive缓存
           inactive = true
         }
       }
@@ -40,7 +41,7 @@ export default {
     data.routerViewDepth = depth
 
     // render previous view if the tree is inactive and kept-alive
-    if (inactive) {
+    if (inactive) { //@doc  如果组件被缓存，直接使用缓存里组件
       return h(cache[name], data, children)
     }
 

@@ -14,7 +14,7 @@ const noop = () => {}
 export default {
   name: 'RouterLink',
   props: {
-    to: {
+    to: {  //@doc 目标路由的链接
       type: toTypes,
       required: true
     },
@@ -24,7 +24,7 @@ export default {
     },
     exact: Boolean,
     append: Boolean,
-    replace: Boolean,
+    replace: Boolean, //@doc 不会留下 history 记录
     activeClass: String,
     exactActiveClass: String,
     event: {
@@ -33,7 +33,7 @@ export default {
     }
   },
   render (h: Function) {
-    const router = this.$router
+    const router = this.$router //@doc VueRouter实例
     const current = this.$route
     const { location, route, href } = router.resolve(
       this.to,
@@ -44,7 +44,7 @@ export default {
     const classes = {}
     const globalActiveClass = router.options.linkActiveClass
     const globalExactActiveClass = router.options.linkExactActiveClass
-    // Support global empty active class
+    // Support global empty active class 
     const activeClassFallback =
       globalActiveClass == null ? 'router-link-active' : globalActiveClass
     const exactActiveClassFallback =
@@ -151,7 +151,7 @@ export default {
       }
     }
 
-    return h(this.tag, data, this.$slots.default)
+    return h(this.tag, data, this.$slots.default)  //@doc 创建dom
   }
 }
 
