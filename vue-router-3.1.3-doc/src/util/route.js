@@ -18,6 +18,7 @@ export function createRoute (
     query = clone(query)
   } catch (e) {}
 
+  //@doc 构造route对象
   const route: Route = {
     name: location.name || (record && record.name),
     meta: (record && record.meta) || {},

@@ -21,7 +21,7 @@ export class HashHistory extends History {
   // to avoid the hashchange listener being fired too early
   setupListeners () {
     const router = this.router
-    const expectScroll = router.options.scrollBehavior
+    const expectScroll = router.options.scrollBehavior  //@doc 滚动行为
     const supportsScroll = supportsPushState && expectScroll
 
     if (supportsScroll) {
@@ -35,7 +35,7 @@ export class HashHistory extends History {
         if (!ensureSlash()) {
           return
         }
-        this.transitionTo(getHash(), route => {
+        this.transitionTo(getHash(), route => { //@doc router当前路径匹配到的路由
           if (supportsScroll) {
             handleScroll(this.router, route, current, true)
           }

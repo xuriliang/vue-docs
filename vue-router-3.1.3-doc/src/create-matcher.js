@@ -14,21 +14,29 @@ export type Matcher = {
 };
 
 export function createMatcher (
-  routes: Array<RouteConfig>,
-  router: VueRouter
+  routes: Array<RouteConfig>, //@doc 路由配置
+  router: VueRouter  //@doc VueRouter实例
 ): Matcher {
-  const { pathList, pathMap, nameMap } = createRouteMap(routes)
+  /*
+  * @doc 
+  * 循环路由配置，解析返回pathList、pathMap、nameMap对象
+  * pathList: 路由的路径，子路的路径会把父路由的拼接上去
+  * pathMap: {path: Record}
+  * nameMap: {name: Record}
+  */
+  const { pathList, pathMap, nameMap } = createRouteMap(routes) //@doc 解析路由配置为几个固定数据格式，方便处理
 
+  //@doc 添加路由规则
   function addRoutes (routes) {
     createRouteMap(routes, pathList, pathMap, nameMap)
   }
 
   function match (
-    raw: RawLocation,
+    raw: RawLocation, //@doc path
     currentRoute?: Route,
     redirectedFrom?: Location
   ): Route {
-    const location = normalizeLocation(raw, currentRoute, false, router)
+    const location = normalizeLocation(raw, currentRoute, false, router) //@doc 处理path，返回{path,query,hash}
     const { name } = location
 
     if (name) {
@@ -60,7 +68,7 @@ export function createMatcher (
       for (let i = 0; i < pathList.length; i++) {
         const path = pathList[i]
         const record = pathMap[path]
-        if (matchRoute(record.regex, location.path, location.params)) {
+        if (matchRoute(record.regex, location.path, location.params)) { //@doc 是否匹配
           return _createRoute(record, location, redirectedFrom)
         }
       }

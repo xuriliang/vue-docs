@@ -67,9 +67,9 @@ export class History {
     onComplete?: Function,
     onAbort?: Function
   ) {
-    const route = this.router.match(location, this.current) //@doc 当前地址匹配的路由
+    const route = this.router.match(location, this.current) //@doc 当前地址匹配的路由对象
     this.confirmTransition(
-      route,
+      route, //@doc 当前地址匹配的路由规则
       () => {
         this.updateRoute(route)
         onComplete && onComplete(route)
@@ -119,7 +119,7 @@ export class History {
     if (
       isSameRoute(route, current) &&
       // in the case the route map has been dynamically appended to
-      route.matched.length === current.matched.length
+      route.matched.length === current.matched.length //@doc matched保存的是record数组
     ) {
       this.ensureURL()
       return abort(new NavigationDuplicated(route))

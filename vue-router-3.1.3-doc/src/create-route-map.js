@@ -5,7 +5,7 @@ import { cleanPath } from './util/path'
 import { assert, warn } from './util/warn'
 
 export function createRouteMap (
-  routes: Array<RouteConfig>,
+  routes: Array<RouteConfig>,  //@doc 路由配置
   oldPathList?: Array<string>,
   oldPathMap?: Dictionary<RouteRecord>,
   oldNameMap?: Dictionary<RouteRecord>
@@ -21,7 +21,7 @@ export function createRouteMap (
   // $flow-disable-line
   const nameMap: Dictionary<RouteRecord> = oldNameMap || Object.create(null)
 
-  routes.forEach(route => {
+  routes.forEach(route => { //@doc 遍历路由配置
     addRouteRecord(pathList, pathMap, nameMap, route)
   })
 
@@ -53,15 +53,22 @@ export function createRouteMap (
   }
 }
 
+/*
+* @doc 
+* 循环路由配置，解析返回pathList、pathMap、nameMap对象
+* pathList: 路由的路径，子路的路径会把父路由的拼接上去
+* pathMap: {path: Record}
+* nameMap: {name: Record}
+*/
 function addRouteRecord (
   pathList: Array<string>,
   pathMap: Dictionary<RouteRecord>,
   nameMap: Dictionary<RouteRecord>,
-  route: RouteConfig,
+  route: RouteConfig, //@doc 当前的路由配置
   parent?: RouteRecord,
   matchAs?: string //@doc 别名路径
 ) {
-  const { path, name } = route
+  const { path, name } = route  //@doc 取出path和name属性
   if (process.env.NODE_ENV !== 'production') {
     assert(path != null, `"path" is required in a route configuration.`)
     assert(
@@ -74,15 +81,15 @@ function addRouteRecord (
 
   const pathToRegexpOptions: PathToRegexpOptions =
     route.pathToRegexpOptions || {} //@doc 编译正则的选项
-  const normalizedPath = normalizePath(path, parent, pathToRegexpOptions.strict)
+  const normalizedPath = normalizePath(path, parent, pathToRegexpOptions.strict) //@doc 如果有父路由，路径前面拼接父路由的地址
 
   if (typeof route.caseSensitive === 'boolean') { //@doc 匹配规则是否大小写敏感
     pathToRegexpOptions.sensitive = route.caseSensitive
   }
 
   const record: RouteRecord = {
-    path: normalizedPath, //@doc 路由path
-    regex: compileRouteRegex(normalizedPath, pathToRegexpOptions), //@doc 对应正则表达式
+    path: normalizedPath, //@doc 路由path，如果有父路由，路径前面拼接父路由的地址
+    regex: compileRouteRegex(normalizedPath, pathToRegexpOptions), //@doc url正则表达式
     components: route.components || { default: route.component },
     instances: {},
     name, //@doc 命名路由
@@ -99,7 +106,7 @@ function addRouteRecord (
           : { default: route.props }
   }
 
-  if (route.children) {
+  if (route.children) { //@doc如果存在子路由，递归辖区
     // Warn if route is named, does not redirect and has a default child route.
     // If users navigate to this route by name, the default child will
     // not be rendered (GH Issue #629)
@@ -130,8 +137,8 @@ function addRouteRecord (
   }
 
   if (!pathMap[record.path]) {
-    pathList.push(record.path)
-    pathMap[record.path] = record
+    pathList.push(record.path)  //@doc 存储解析后的路由路径
+    pathMap[record.path] = record //@doc key为路由路径 ，value为解析的路由对象
   }
 
   if (route.alias !== undefined) { //@doc 别名，多个路径都指向同一个组件
@@ -146,7 +153,7 @@ function addRouteRecord (
         // skip in dev to make it work
         continue
       }
-
+      //@doc 如果存在别名，别名也作为一个path
       const aliasRoute = {
         path: alias,
         children: route.children
@@ -157,14 +164,14 @@ function addRouteRecord (
         nameMap,
         aliasRoute,
         parent,
-        record.path || '/' // matchAs
+        record.path || '/' // matchAs  @doc别名对应的真实路径
       )
     }
   }
 
   if (name) {
     if (!nameMap[name]) {
-      nameMap[name] = record
+      nameMap[name] = record  //@doc key为路由名称 ，value为解析的路由对象
     } else if (process.env.NODE_ENV !== 'production' && !matchAs) {
       warn(
         false,
@@ -176,10 +183,10 @@ function addRouteRecord (
 }
 
 function compileRouteRegex (
-  path: string,
-  pathToRegexpOptions: PathToRegexpOptions
+  path: string, //@doc 处理后的路由path
+  pathToRegexpOptions: PathToRegexpOptions //@doc 正则选项
 ): RouteRegExp {
-  const regex = Regexp(path, [], pathToRegexpOptions)
+  const regex = Regexp(path, [], pathToRegexpOptions)  //@doc npm path-to-regexp
   if (process.env.NODE_ENV !== 'production') {
     const keys: any = Object.create(null)
     regex.keys.forEach(key => {
@@ -192,14 +199,14 @@ function compileRouteRegex (
   }
   return regex
 }
-
+//@doc 路由路径处理，如果parent存在，拼接parent的path
 function normalizePath (
   path: string,
   parent?: RouteRecord,
   strict?: boolean
 ): string {
-  if (!strict) path = path.replace(/\/$/, '')
+  if (!strict) path = path.replace(/\/$/, '') //@doc 去掉最后一个/
   if (path[0] === '/') return path
   if (parent == null) return path
-  return cleanPath(`${parent.path}/${path}`)
+  return cleanPath(`${parent.path}/${path}`)  //doc 替换// -> /
 }

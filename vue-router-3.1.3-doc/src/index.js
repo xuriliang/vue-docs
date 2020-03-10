@@ -33,15 +33,16 @@ export default class VueRouter {
   afterHooks: Array<?AfterNavigationHook>;
 
   constructor (options: RouterOptions = {}) {
-    this.app = null
-    this.apps = []
-    this.options = options
+    this.app = null //@doc 当前VueRouter实例
+    this.apps = []  //@doc VueRouter实例列表
+    this.options = options //@doc VueRouter参数
     this.beforeHooks = []
     this.resolveHooks = []
     this.afterHooks = []
-    this.matcher = createMatcher(options.routes || [], this) //@doc {match,addRoutes}
+    this.matcher = createMatcher(options.routes || [], this) //@doc {match,addRoutes}  addRoutes添加路由规则函数
 
     let mode = options.mode || 'hash'
+    //@doc 当浏览器不支持 history.pushState 控制路由是否应该回退到 hash 模式。默认值为 true
     this.fallback = mode === 'history' && !supportsPushState && options.fallback !== false  //@doc 是否自动切换到hash模式
     if (this.fallback) {
       mode = 'hash'
@@ -69,7 +70,7 @@ export default class VueRouter {
   }
 
   match (
-    raw: RawLocation,
+    raw: RawLocation, //@doc 路由path
     current?: Route,
     redirectedFrom?: Location
   ): Route {
@@ -80,7 +81,7 @@ export default class VueRouter {
     return this.history && this.history.current
   }
 
-  init (app: any /* Vue component instance */) {
+  init (app: any /* Vue component instance */) { //@doc vue组件实例
     process.env.NODE_ENV !== 'production' && assert(
       install.installed,
       `not installed. Make sure to call \`Vue.use(VueRouter)\` ` +
@@ -117,7 +118,7 @@ export default class VueRouter {
         history.setupListeners()
       }
       history.transitionTo(
-        history.getCurrentLocation(), //@doc getHash
+        history.getCurrentLocation(), //@doc 返回getHash的值
         setupHashListener, //@doc onComplete回调
         setupHashListener //@doc onAbort回调
       )

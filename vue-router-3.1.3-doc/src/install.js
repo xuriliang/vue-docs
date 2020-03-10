@@ -23,8 +23,8 @@ export function install (Vue) {
       if (isDef(this.$options.router)) { //@doc Vue参数中VueRouter实例
         this._routerRoot = this
         this._router = this.$options.router
-        this._router.init(this)
-        Vue.util.defineReactive(this, '_route', this._router.history.current)
+        this._router.init(this) 
+        Vue.util.defineReactive(this, '_route', this._router.history.current) //@doc 定义_route当前路由
       } else {
         this._routerRoot = (this.$parent && this.$parent._routerRoot) || this
       }
