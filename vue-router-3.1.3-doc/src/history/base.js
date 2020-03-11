@@ -71,7 +71,7 @@ export class History {
     this.confirmTransition(
       route, //@doc 当前地址匹配的路由规则
       () => {
-        this.updateRoute(route)
+        this.updateRoute(route)  //@doc 更新当前路由，执行afterHooks钩子
         onComplete && onComplete(route)
         this.ensureURL()
 
@@ -124,19 +124,19 @@ export class History {
       this.ensureURL()
       return abort(new NavigationDuplicated(route))
     }
-
-    const { updated, deactivated, activated } = resolveQueue(
+    //@doc 找到需要执行不同钩子对应的RouteRecord
+    const { updated, deactivated, activated } = resolveQueue(  
       this.current.matched,
-      route.matched
+      route.matched //@doc 匹配的RouteRecord数组
     )
-
+    //@doc 导航守卫
     const queue: Array<?NavigationGuard> = [].concat(
       // in-component leave guards
-      extractLeaveGuards(deactivated),
+      extractLeaveGuards(deactivated),  //@doc 组件停止钩子
       // global before hooks
-      this.router.beforeHooks,
+      this.router.beforeHooks,   //@doc 全局钩子，通过beforeEach设置
       // in-component update hooks
-      extractUpdateHooks(updated),
+      extractUpdateHooks(updated),  //@doc 组件更新钩子
       // in-config enter guards
       activated.map(m => m.beforeEnter),
       // async components
@@ -149,7 +149,7 @@ export class History {
         return abort()
       }
       try {
-        hook(route, current, (to: any) => {
+        hook(route, current, (to: any) => {  //@doc 对应三个参数 to,form,next
           if (to === false || isError(to)) {
             // next(false) -> abort navigation, ensure current URL
             this.ensureURL(true)
@@ -202,7 +202,7 @@ export class History {
 
   updateRoute (route: Route) {
     const prev = this.current
-    this.current = route
+    this.current = route //@doc 当前匹配的路由
     this.cb && this.cb(route)
     this.router.afterHooks.forEach(hook => {
       hook && hook(route, prev)

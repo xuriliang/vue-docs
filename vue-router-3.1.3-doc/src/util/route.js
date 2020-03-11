@@ -57,7 +57,7 @@ export const START = createRoute(null, {
 
 function formatMatch (record: ?RouteRecord): Array<RouteRecord> {
   const res = []
-  while (record) {
+  while (record) {  //@doc 往父组件递归，返回匹配的的路由
     res.unshift(record)
     record = record.parent
   }

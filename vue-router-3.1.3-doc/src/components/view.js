@@ -11,7 +11,7 @@ export default {
       default: 'default'
     }
   },
-  render (_, { props, children, parent, data }) {
+  render (_, { props, children, parent, data }) { //@doc vue实例上的_route路由发生改变时，会重新触发render
     // used by devtools to display a router-view badge
     data.routerView = true
 
@@ -45,7 +45,7 @@ export default {
       return h(cache[name], data, children)
     }
 
-    const matched = route.matched[depth]
+    const matched = route.matched[depth] //@doc 当前路由匹配的RouteRecord
     // render empty node if no matched route
     if (!matched) {
       cache[name] = null

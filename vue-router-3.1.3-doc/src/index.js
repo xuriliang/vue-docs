@@ -131,8 +131,8 @@ export default class VueRouter {
     })
   }
 
-  beforeEach (fn: Function): Function {
-    return registerHook(this.beforeHooks, fn)
+  beforeEach (fn: Function): Function { //@doc 添加钩子
+    return registerHook(this.beforeHooks, fn) 
   }
 
   beforeResolve (fn: Function): Function {
@@ -241,9 +241,9 @@ export default class VueRouter {
     }
   }
 }
-
+//@doc 注册钩子函数
 function registerHook (list: Array<any>, fn: Function): Function {
-  list.push(fn)
+  list.push(fn) //@doc 支持多次调用
   return () => {
     const i = list.indexOf(fn)
     if (i > -1) list.splice(i, 1)
