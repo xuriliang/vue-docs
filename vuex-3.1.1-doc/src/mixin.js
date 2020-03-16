@@ -22,7 +22,7 @@ export default function (Vue) {
   function vuexInit () {
     const options = this.$options
     // store injection
-    if (options.store) {  //@dic vue中store参数，为每一个vue实例添加store实例
+    if (options.store) {  //@dic vue中store参数，为每一个vue实例添加Vuex.Store实例
       this.$store = typeof options.store === 'function'
         ? options.store()
         : options.store

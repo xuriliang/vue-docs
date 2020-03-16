@@ -31,7 +31,7 @@ export class Store { //@doc new Vuex.Store
     this._actionSubscribers = []
     this._mutations = Object.create(null)
     this._wrappedGetters = Object.create(null)
-    this._modules = new ModuleCollection(options)  
+    this._modules = new ModuleCollection(options)  //@doc Vuex.Store的参数，如：{modules: {user: user,phone: phone}}
     this._modulesNamespaceMap = Object.create(null)
     this._subscribers = []
     this._watcherVM = new Vue()

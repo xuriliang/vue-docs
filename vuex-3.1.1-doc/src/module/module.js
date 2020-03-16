@@ -2,16 +2,16 @@ import { forEachValue } from '../util'
 
 // Base data struct for store's module, package with some attribute and method
 export default class Module {
-  constructor (rawModule, runtime) {
+  constructor (rawModule, runtime) { //@doc rawModule原始的Vuex.Store参数，{modules: {user: user,phone: phone}}
     this.runtime = runtime
     // Store some children item
     this._children = Object.create(null)
     // Store the origin module object which passed by programmer
-    this._rawModule = rawModule
+    this._rawModule = rawModule //@doc 原始的模块信息{state,getters,mutations,actions} 或  {modules: {user: user,phone: phone}}
     const rawState = rawModule.state
 
     // Store the origin module's state
-    this.state = (typeof rawState === 'function' ? rawState() : rawState) || {}
+    this.state = (typeof rawState === 'function' ? rawState() : rawState) || {}  //@doc 原始值
   }
 
   get namespaced () {

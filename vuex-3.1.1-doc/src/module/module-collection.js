@@ -1,10 +1,10 @@
 import Module from './module'
 import { assert, forEachValue } from '../util'
 
-export default class ModuleCollection { //@doc 根据modules构建一个Module的树结构
-  constructor (rawRootModule) {
+export default class ModuleCollection { 
+  constructor (rawRootModule) {  //@doc Vuex.Store的参数，如：{modules: {user: user,phone: phone}}
     // register root module (Vuex.Store options)
-    this.register([], rawRootModule, false)
+    this.register([], rawRootModule, false)  //@doc 根据modules构建一个Module的树结构
   }
 
   get (path) {
@@ -25,22 +25,30 @@ export default class ModuleCollection { //@doc 根据modules构建一个Module�
     update([], this.root, rawRootModule)
   }
 
-  register (path, rawModule, runtime = true) {
+  register (path, rawModule, runtime = true) {  //@doc 根据modules构建一个Module的树结构
     if (process.env.NODE_ENV !== 'production') {
       assertRawModule(path, rawModule)
     }
 
     const newModule = new Module(rawModule, runtime)
     if (path.length === 0) {
-      this.root = newModule
+      /*
+      * @doc
+      *  namespaced: false
+      *  runtime: false
+      *  _children: {}
+      *  _rawModule: {modules: {…}}
+      *  state: {}
+      */
+      this.root = newModule  
     } else {
-      const parent = this.get(path.slice(0, -1))
+      const parent = this.get(path.slice(0, -1))  //@doc 找到父级模块
       parent.addChild(path[path.length - 1], newModule)
     }
 
     // register nested modules
     if (rawModule.modules) { //@doc 递归modules
-      forEachValue(rawModule.modules, (rawChildModule, key) => {
+      forEachValue(rawModule.modules, (rawChildModule, key) => { //@doc key为模块的名称，rawChildModule为模块的对应的{state,getters,mutations,actions}
         this.register(path.concat(key), rawChildModule, runtime)
       })
     }
