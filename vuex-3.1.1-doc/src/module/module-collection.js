@@ -4,7 +4,7 @@ import { assert, forEachValue } from '../util'
 export default class ModuleCollection { 
   constructor (rawRootModule) {  //@doc Vuex.Store的参数，如：{modules: {user: user,phone: phone}}
     // register root module (Vuex.Store options)
-    this.register([], rawRootModule, false)  //@doc 根据modules构建一个Module的树结构
+    this.register([], rawRootModule, false)  //@doc 根据modules构建一个Module的父子结构
   }
 
   get (path) {

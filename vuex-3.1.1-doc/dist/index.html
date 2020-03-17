@@ -41,6 +41,16 @@
 					      context.commit('MODIFY_NAME','sdfksdfks')
 					    }
 					  }
+					},
+					phone: {
+						state: {
+							firstName: 'xu',
+						},
+						mutations: { 
+					    MODIFY_NAME (state,newName) {
+					      state.lastName = newName
+					    }
+					  }
 					}
 				}
 			})

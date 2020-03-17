@@ -31,7 +31,7 @@ export class Store { //@doc new Vuex.Store
     this._actionSubscribers = []
     this._mutations = Object.create(null)
     this._wrappedGetters = Object.create(null)
-    this._modules = new ModuleCollection(options)  //@doc Vuex.Store的参数，如：{modules: {user: user,phone: phone}}
+    this._modules = new ModuleCollection(options)  //@doc options: Vuex.Store的参数，如：{modules: {user: user,phone: phone}}
     this._modulesNamespaceMap = Object.create(null)
     this._subscribers = []
     this._watcherVM = new Vue()
@@ -50,7 +50,7 @@ export class Store { //@doc new Vuex.Store
     // strict mode
     this.strict = strict
 
-    const state = this._modules.root.state
+    const state = this._modules.root.state //@doc this._modules.root modules父子结构的root模块
 
     // init root module.
     // this also recursively registers all sub-modules
@@ -86,9 +86,9 @@ export class Store { //@doc new Vuex.Store
       type,
       payload,
       options
-    } = unifyObjectStyle(_type, _payload, _options) //@doc 转换为对象类型
+    } = unifyObjectStyle(_type, _payload, _options) //@doc 统一格式，支持对象风格
 
-    const mutation = { type, payload }
+    const mutation = { type, payload } //@doc mutation的参数
     const entry = this._mutations[type]
     if (!entry) {
       if (process.env.NODE_ENV !== 'production') {
@@ -297,21 +297,21 @@ function resetStoreVM (store, state, hot) {
   }
 }
 
-function installModule (store, rootState, path, module, hot) {
+function installModule (store, rootState, path, module, hot) { //@doc eg:installModule(this, state, [], this._modules.root)
   const isRoot = !path.length
   const namespace = store._modules.getNamespace(path)
 
   // register in namespace map
   if (module.namespaced) {
-    store._modulesNamespaceMap[namespace] = module
+    store._modulesNamespaceMap[namespace] = module  //@doc 根据命名空间缓存module
   }
 
   // set state
   if (!isRoot && !hot) { 
-    const parentState = getNestedState(rootState, path.slice(0, -1))
-    const moduleName = path[path.length - 1]
+    const parentState = getNestedState(rootState, path.slice(0, -1)) //@doc 获取到父模块的state值
+    const moduleName = path[path.length - 1] //@doc 父模块名
     store._withCommit(() => {
-      Vue.set(parentState, moduleName, module.state)
+      Vue.set(parentState, moduleName, module.state) //@doc Vue.set( target, key, value )
     })
   }
 
@@ -333,7 +333,7 @@ function installModule (store, rootState, path, module, hot) {
     registerGetter(store, namespacedType, getter, local)
   })
 
-  module.forEachChild((child, key) => {
+  module.forEachChild((child, key) => {  //@doc 递归安装子模块
     installModule(store, rootState, path.concat(key), child, hot)
   })
 }
@@ -342,7 +342,7 @@ function installModule (store, rootState, path, module, hot) {
  * make localized dispatch, commit, getters and state
  * if there is no namespace, just use root ones
  */
-function makeLocalContext (store, namespace, path) {
+function makeLocalContext (store, namespace, path) {  
   const noNamespace = namespace === ''
 
   const local = {
@@ -418,10 +418,10 @@ function makeLocalGetters (store, namespace) {
   return gettersProxy
 }
 
-function registerMutation (store, type, handler, local) {
+function registerMutation (store, type, handler, local) { //@doc type：mutation的名称
   const entry = store._mutations[type] || (store._mutations[type] = [])
   entry.push(function wrappedMutationHandler (payload) {
-    handler.call(store, local.state, payload)
+    handler.call(store, local.state, payload) //@doc mutation函数的两个参数local.state，payload，允许不通模块同名
   })
 }
 
@@ -480,7 +480,7 @@ function getNestedState (state, path) {
     ? path.reduce((state, key) => state[key], state)
     : state
 }
-
+//@doc 统一格式,支持对象提交风格（使用包含 type 属性的对象）
 function unifyObjectStyle (type, payload, options) {
   if (isObject(type) && type.type) {
     options = payload
